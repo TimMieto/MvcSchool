@@ -1,0 +1,88 @@
+﻿@*@model IEnumerable<MvcSchool.Models.Course>*@
+@model MvcSchool.Models.CourseSearchViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-controller="Courses" asp-action="Index" method="get">
+    <p>
+        课程名:<input type="text" name="SearchString">
+        课程类别:
+        @* 想实现排序功能 *@
+        <select asp-for="SearchLevel" asp-items="Model.Levels">
+            <option value="">All</option>
+        </select>
+        @* 想实现排序功能 *@
+        授课时间:
+        <select asp-for="SearchDate" asp-items="Model.Dates">
+            <option value="">All</option>
+        </select>
+        授课时段:
+        <select asp-for="SearchTime" asp-items="Model.Times">
+            <option value="">All</option>
+        </select>
+        <input type="submit" value="検索" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].CourseCredit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].CourseLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].CourseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].CourseTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses[0].MajorName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Courses) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseCredit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MajorName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

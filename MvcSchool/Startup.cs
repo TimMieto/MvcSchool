@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using MvcSchool.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace MvcSchool
 {
@@ -31,43 +34,25 @@ namespace MvcSchool
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.Configure<IISOptions>(options =>
-            //{
-            //    options.ForwardClientCertificate = false;
-            //});
-
-            //services.AddDbContext<SchoolUserContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")));
-
-
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    //.AddDefaultUI(UIFramework.Bootstrap4)
-            //    .AddEntityFrameworkStores<SchoolUserContext>()
-            //    .AddDefaultTokenProviders();
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            //    .AddRazorPagesOptions(options =>
-            //    {
-            //        options.AllowAreas = true;
-            //        options.Conventions.AuthorizeAreaFolder("Identity", "/Pages/Account/Manage");
-            //        options.Conventions.AuthorizeAreaPage("Identity", "/Pages/Account/Logout");
-            //    });
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.LoginPath = $"/Identity/Pages/Account/Login";
-            //    options.LogoutPath = $"/Identity/Pages/Account/Logout";
-            //    options.AccessDeniedPath = $"/Identity/Pages/Account/AccessDenied";
-            //});
-
-            //这一行是基架添加的
             services.AddDbContext<MvcSchoolContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MvcSchoolContext")));
-            //services.AddDbContext<SchoolUserContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //为用户验证追加以下内容
+            services.AddMvc(config =>
+            {
+                // using Microsoft.AspNetCore.Mvc.Authorization;
+                // using Microsoft.AspNetCore.Authorization;
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //Areas/Identity/IdentityHostingStartup.cs 重复说明---500.30 error
             //services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
             //     .AddEntityFrameworkStores<MvcSchoolContext>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

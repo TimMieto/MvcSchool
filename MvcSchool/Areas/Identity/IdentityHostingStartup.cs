@@ -20,7 +20,7 @@ namespace MvcSchool.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("SchoolUserContextConnection")));
 
-                services.AddDefaultIdentity<MvcSchoolUser>()
+                services.AddDefaultIdentity<MvcSchoolUser>().AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<SchoolUserContext>();
             });
         }

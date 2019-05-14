@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcSchool.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcSchool.Controllers
 {
@@ -43,6 +44,7 @@ namespace MvcSchool.Controllers
         }
 
         // GET: Majors/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();

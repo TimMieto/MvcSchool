@@ -41,25 +41,25 @@ namespace MvcSchool
             //        Configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                //.AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<SchoolUserContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    //.AddDefaultUI(UIFramework.Bootstrap4)
+            //    .AddEntityFrameworkStores<SchoolUserContext>()
+            //    .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddRazorPagesOptions(options =>
-                {
-                    options.AllowAreas = true;
-                    options.Conventions.AuthorizeAreaFolder("Identity", "/Pages/Account/Manage");
-                    options.Conventions.AuthorizeAreaPage("Identity", "/Pages/Account/Logout");
-                });
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            //    .AddRazorPagesOptions(options =>
+            //    {
+            //        options.AllowAreas = true;
+            //        options.Conventions.AuthorizeAreaFolder("Identity", "/Pages/Account/Manage");
+            //        options.Conventions.AuthorizeAreaPage("Identity", "/Pages/Account/Logout");
+            //    });
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = $"/Identity/Pages/Account/Login";
-                options.LogoutPath = $"/Identity/Pages/Account/Logout";
-                options.AccessDeniedPath = $"/Identity/Pages/Account/AccessDenied";
-            });
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = $"/Identity/Pages/Account/Login";
+            //    options.LogoutPath = $"/Identity/Pages/Account/Logout";
+            //    options.AccessDeniedPath = $"/Identity/Pages/Account/AccessDenied";
+            //});
 
             //这一行是基架添加的
             services.AddDbContext<MvcSchoolContext>(options =>

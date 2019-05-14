@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MvcSchool.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MvcSchool.Areas.Identity.Pages.Account.Manage
 {
+    [AllowAnonymous]
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<MvcSchoolUser> _userManager;

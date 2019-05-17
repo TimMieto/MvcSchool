@@ -6,11 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using MvcSchool.Models;
+using MvcSchool.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+
 
 namespace MvcSchool
 {
@@ -53,6 +55,9 @@ namespace MvcSchool
             //services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
             //     .AddEntityFrameworkStores<MvcSchoolContext>();
 
+            services.AddScoped<IAuthorizationHandler, ContactIsOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ContactAdministratorsAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, ContactManagerAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +85,8 @@ namespace MvcSchool
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }

@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MvcSchool.Areas.Identity.Data;
 using MvcSchool.Models;
+using MvcSchool.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 [assembly: HostingStartup(typeof(MvcSchool.Areas.Identity.IdentityHostingStartup))]
 namespace MvcSchool.Areas.Identity
@@ -23,6 +26,8 @@ namespace MvcSchool.Areas.Identity
                 services.AddDefaultIdentity<MvcSchoolUser>()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<SchoolUserContext>();
+
+
             });
         }
     }

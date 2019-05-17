@@ -5,16 +5,39 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcSchool.Models;
+using MvcSchool.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MvcSchool.Areas.Identity.Data;
 
 namespace MvcSchool.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly MvcSchoolContext _context;
+        //private readonly MvcSchoolContext _context;
+        //private readonly SchoolUserContext _contextUser;
 
-        public StudentsController(MvcSchoolContext context)
+        //public StudentsController(MvcSchoolContext context, SchoolUserContext contextUser)
+        //{
+        //    _context = context;
+        //    _contextUser = contextUser;
+        //}
+
+        private readonly MvcSchoolContext _context;
+        private readonly SchoolUserContext _contextUser;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<MvcSchoolUser> _userManager;
+
+        public StudentsController(
+            MvcSchoolContext context,
+            SchoolUserContext contextUser,
+            IAuthorizationService authorizationService,
+            UserManager<MvcSchoolUser> userManager)
         {
             _context = context;
+            _contextUser = contextUser;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         // GET: Students

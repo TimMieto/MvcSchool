@@ -81,9 +81,20 @@ namespace MvcSchool.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(student);
+                student.OwnerID = _userManager.GetUserId(User);
+
+                var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                            User, student,
+                                                            ContactOperations.Create);
+                if (!isAuthorized.Succeeded)
+                {
+                    return new ChallengeResult();
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["MajorName"] = new SelectList(_context.Major, "MajorName", "MajorName", student.MajorName);
             return View(student);
         }

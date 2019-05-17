@@ -56,8 +56,8 @@ namespace MvcSchool
             //     .AddEntityFrameworkStores<MvcSchoolContext>();
 
             services.AddScoped<IAuthorizationHandler, ContactIsOwnerAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, ContactAdministratorsAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, ContactManagerAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, ContactAdministratorsAuthorizationHandler>();
+            //services.AddSingleton<IAuthorizationHandler, ContactManagerAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

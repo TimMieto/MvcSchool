@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<MvcSchool.Models.Student>
+@using Microsoft.AspNetCore.Authorization;
+@using MvcSchool.Authorization;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 @{
     ViewData["Title"] = "Index";
@@ -9,8 +13,8 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<label ></label>
-<input  type="checkbox" /><br />
+<label></label>
+<input type="checkbox" /><br />
 
 
 <table class="table">
@@ -72,9 +76,17 @@
                     @Html.DisplayFor(modelItem => item.EnrollmentDate)
                 </th>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
+                    @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Update)).Succeeded)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a>
+                        @: |
+                    }
+                    <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> 
+                    @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Delete)).Succeeded)
+                    {
+                        @: |
+                        <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
+                    }
                 </td>
             </tr>
         }

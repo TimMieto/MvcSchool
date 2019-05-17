@@ -24,18 +24,18 @@ namespace MvcSchool.Controllers
         //}
 
         private readonly MvcSchoolContext _context;
-        private readonly SchoolUserContext _contextUser;
+        //private readonly SchoolUserContext _contextUser;
         private readonly IAuthorizationService _authorizationService;
         private readonly UserManager<MvcSchoolUser> _userManager;
 
         public StudentsController(
             MvcSchoolContext context,
-            SchoolUserContext contextUser,
+        //    SchoolUserContext contextUser,
             IAuthorizationService authorizationService,
             UserManager<MvcSchoolUser> userManager)
         {
             _context = context;
-            _contextUser = contextUser;
+        //    _contextUser = contextUser;
             _userManager = userManager;
             _authorizationService = authorizationService;
         }
@@ -81,11 +81,11 @@ namespace MvcSchool.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(student);
+                //绑定OwnerID
                 student.OwnerID = _userManager.GetUserId(User);
 
-                var isAuthorized = await _authorizationService.AuthorizeAsync(
-                                                            User, student,
-                                                            ContactOperations.Create);
+                //用控制器
+                var isAuthorized = await _authorizationService.AuthorizeAsync(User, student, ContactOperations.Create);
                 if (!isAuthorized.Succeeded)
                 {
                     return new ChallengeResult();
@@ -108,10 +108,20 @@ namespace MvcSchool.Controllers
             }
 
             var student = await _context.Student.FindAsync(id);
+
             if (student == null)
             {
                 return NotFound();
             }
+
+            //Only if the OwnerId matches, user has the authorization to edit.
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, student,
+                                                    ContactOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
             ViewData["MajorName"] = new SelectList(_context.Major, "MajorName", "MajorName", student.MajorName);
             return View(student);
         }
@@ -132,6 +142,7 @@ namespace MvcSchool.Controllers
             {
                 try
                 {
+                    student.OwnerID = _userManager.GetUserId(User);
                     _context.Update(student);
                     await _context.SaveChangesAsync();
                 }
@@ -146,8 +157,28 @@ namespace MvcSchool.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, student,
+                                                ContactOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+            //　//submitted 機能
+            //if (student.Status == ContactStatus.Approved)
+            //{
+            //    // If the contact is updated after approval, 
+            //    // and the user cannot approve set the status back to submitted
+            //    var canApprove = await _authorizationService.AuthorizeAsync(User, student,
+            //                            ContactOperations.Approve);
+
+            //    if (!canApprove.Succeeded) student.Status = ContactStatus.Submitted;
+            //}
+
             ViewData["MajorName"] = new SelectList(_context.Major, "MajorName", "MajorName", student.MajorName);
             return View(student);
         }
@@ -162,6 +193,14 @@ namespace MvcSchool.Controllers
 
             var student = await _context.Student
                 .FirstOrDefaultAsync(m => m.StudentId == id);
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, student,
+                            ContactOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
             if (student == null)
             {
                 return NotFound();
@@ -176,6 +215,14 @@ namespace MvcSchool.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Student.FindAsync(id);
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, student,
+                                        ContactOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

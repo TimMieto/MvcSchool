@@ -9,7 +9,7 @@ namespace MvcSchool.Authorization
     public static class ContactOperations
     {
         public static OperationAuthorizationRequirement Create =
-        new OperationAuthorizationRequirement { Name = Constants.CreateOperationName };
+          new OperationAuthorizationRequirement { Name = Constants.CreateOperationName };
         public static OperationAuthorizationRequirement Read =
           new OperationAuthorizationRequirement { Name = Constants.ReadOperationName };
         public static OperationAuthorizationRequirement Update =

@@ -1,0 +1,18 @@
+﻿@model MvcSchool.Controllers.UpdateUserRoleViewModel
+
+@{
+}
+
+<div>
+    <form asp-controller="UserRoles" asp-action="UpdateUserToRole" method="post">
+        <label>User Name</label>
+        <input asp-for="UserName" value="" />
+        @*<select asp-for="UserName" class="form-control" asp-items="ViewBag.UserNameList"></select>*@
+        <label>Role Name</label>
+        <input asp-for="RoleName" value="" />
+        @*<select asp-for="RoleName" class="form-control" asp-items="ViewBag.RoleNameList"></select>*@
+        <input type="submit" value="Add Role" />
+        <input type="hidden" asp-for="Delete" value="false" id="delete" />
+        <input type="submit" value="Delete Role" onclick="document.getElementById('delete').value = 'true'" />
+    </form>
+</div>

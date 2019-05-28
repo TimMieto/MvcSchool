@@ -18,7 +18,7 @@ namespace MvcSchool.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserRolesController(
-            SchoolUserContext schoolUserContext, 
+            SchoolUserContext schoolUserContext,
             UserManager<MvcSchoolUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
@@ -64,28 +64,55 @@ namespace MvcSchool.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> UpdateUserToRole()
+        {
+            IQueryable<string> roleNameQuery = from r in _schoolUserContext.Roles
+                                               select r.Name;
+            IQueryable<string> userNameQuery = from u in _schoolUserContext.Users
+                                               select u.UserName;
+
+            ViewBag.RoleNameList = new SelectList(await roleNameQuery.Distinct().ToListAsync());
+            ViewBag.UserNameList = new SelectList(await userNameQuery.Distinct().ToListAsync());
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserToRole(UpdateUserRoleViewModel updateViewModel)
+        {
+            if (!String.IsNullOrEmpty(updateViewModel.UserName) && !String.IsNullOrEmpty(updateViewModel.RoleName))
+            {
+                var user = await _userManager.FindByNameAsync(updateViewModel.UserName);
+
+                if (updateViewModel.Delete)
+                    await _userManager.RemoveFromRoleAsync(user, updateViewModel.RoleName);
+                else
+                    await _userManager.AddToRoleAsync(user, updateViewModel.RoleName);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
         //[HttpPost]
-        //public async Task<IActionResult> UpdateUserToRole(string userName, string roleName, bool delete)
+        //public async Task<IActionResult> UpdateUserRole(UpdateUserRoleViewModel updateModel)
         //{
-        //    var user = await _userManager.FindByNameAsync(userName);
+        //    var user = await _userManager.FindByNameAsync(updateModel.UserName);
 
-        //    if (delete)
-        //        await _userManager.RemoveFromRoleAsync(user, roleName);
+        //    if (updateModel.Delete)
+        //        await _userManager.RemoveFromRoleAsync(user, updateModel.RoleName);
         //    else
-        //        await _userManager.AddToRoleAsync(user, roleName);
-
-
-        //    IQueryable<string> roleNameQuery = from r in _schoolUserContext.Roles
-        //                                       select r.Name;
-        //    IQueryable<string> userNameQuery = from u in _schoolUserContext.Users
-        //                                       select u.UserName;
-
-        //    ViewBag.RoleNameList = new SelectList(await roleNameQuery.Distinct().ToListAsync());
-        //    ViewBag.UserNameList = new SelectList(await userNameQuery.Distinct().ToListAsync());
+        //        await _userManager.AddToRoleAsync(user, updateModel.RoleName);
 
         //    return RedirectToAction("Index");
         //}
+
     }
 
-
+    public class UpdateUserRoleViewModel
+    {
+        public string UserName { get; set; }
+        public string RoleName { get; set; }
+        public bool Delete { get; set; }
+    }
 }

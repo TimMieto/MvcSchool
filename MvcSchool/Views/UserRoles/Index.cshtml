@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>*@
-@model IEnumerable<MvcSchool.Models.UserRoleViewModel>
+﻿@model IEnumerable<MvcSchool.Models.UserRoleViewModel>
 @{
     ViewData["Title"] = "Users Manager";
 }
@@ -21,6 +20,10 @@
         <input name="roleName" value="" />
         <input type="submit" value="Create Role" />
     </form>
+</div>
+
+<div>
+    <partial name="_AddUserToRole" model="new MvcSchool.Controllers.UpdateUserRoleViewModel()"/>
 </div>
 
 <table class="table">

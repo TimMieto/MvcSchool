@@ -44,51 +44,57 @@
             <th>
                 @Html.DisplayNameFor(model => model.EnrollmentDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudentId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StuFamilyName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StuGivenName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StuGender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StuBirth)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MajorName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StuCredit)
-                </td>
-                <th>
-                    @Html.DisplayFor(modelItem => item.EnrollmentDate)
-                </th>
-                <td>
-                    @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Update)).Succeeded)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a>
-                        @: |
-                    }
-                    <a asp-action="Details" asp-route-id="@item.StudentId">Details</a> 
-                    @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Delete)).Succeeded)
-                    {
-                        @: |
-                        <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
-                    }
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StuFamilyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StuGivenName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StuGender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StuBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MajorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StuCredit)
+            </td>
+            <th>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Update)).Succeeded)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.StudentId">Edit</a>
+                    @: |
+                }
+                <a asp-action="Details" asp-route-id="@item.StudentId">Details</a>
+                @if ((await AuthorizationService.AuthorizeAsync(User, item, ContactOperations.Delete)).Succeeded)
+                {
+                    @: |
+                    <a asp-action="Delete" asp-route-id="@item.StudentId">Delete</a>
+                }
+            </td>
+        </tr>
         }
     </tbody>
 </table>

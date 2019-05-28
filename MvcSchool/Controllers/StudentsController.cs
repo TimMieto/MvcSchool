@@ -60,7 +60,53 @@ namespace MvcSchool.Controllers
             {
                 return NotFound();
             }
+            
+            return View(student);
+        }
 
+        //POST:Students/Details
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(int? id, ContactStatus status)
+        {
+            var student = await _context.Student.FirstOrDefaultAsync(m => m.StudentId == id);
+
+            if (id != student.StudentId)
+            {
+                return NotFound();
+            }
+
+            var contactOperation = (status == ContactStatus.Approved) ? ContactOperations.Approve : ContactOperations.Reject;
+
+            //var isAuthorized = await _authorizationService.AuthorizeAsync(User, student, contactOperation);
+
+            if (!User.IsInRole("Administrator")
+                && !User.IsInRole("Teacher"))
+            {
+                return new ChallengeResult();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    student.Status = status;
+                    _context.Update(student);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StudentExists(student.StudentId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
             return View(student);
         }
 

@@ -1,23 +1,31 @@
-﻿@model IEnumerable<MvcSchool.Models.UserRoleViewModel>
-
+﻿@*@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>*@
+@model IEnumerable<MvcSchool.Models.UserRoleViewModel>
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Users Manager";
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<p>Use this page to detail your site's users and roles.</p>
 
+<div>
+    <form asp-controller="UserRoles" asp-action="CreateUser" method="post">
+        <label>User Email</label>
+        <input name="email" value="" />
+        <input type="submit" value="Create User" />
+    </form>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div>
+    <form asp-controller="UserRoles" asp-action="CreateRole" method="post">
+        <label>Role Name</label>
+        <input name="roleName" value="" />
+        <input type="submit" value="Create Role" />
+    </form>
+</div>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
@@ -35,9 +43,6 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
@@ -52,8 +57,7 @@
                         }
                     }
                 </td>
-                <td>
-                </td>
+                <td></td>
             </tr>
         }
     </tbody>

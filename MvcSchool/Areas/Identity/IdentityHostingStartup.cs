@@ -23,10 +23,16 @@ namespace MvcSchool.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("SchoolUserContextConnection")));
 
-                services.AddDefaultIdentity<MvcSchoolUser>()
+                services.AddDefaultIdentity<MvcSchoolUser>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequiredLength = 6;
+                })
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<SchoolUserContext>();
-
 
             });
         }

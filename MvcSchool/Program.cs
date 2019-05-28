@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using MvcSchool.Models;
-using MvcSchool;
+using Microsoft.AspNetCore.Identity;
+using MvcSchool.Areas.Identity.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System;
+using Microsoft.Extensions.Logging;
+
 
 namespace MvcSchool
 {
@@ -25,12 +23,34 @@ namespace MvcSchool
             {
                 var services = scope.ServiceProvider;
 
+                var dbContext = services.GetRequiredService<MvcSchoolContext>();
+                var userContext = services.GetRequiredService<SchoolUserContext>();
+                var userMgr = services.GetRequiredService<UserManager<MvcSchoolUser>>();
+                var roleMgr = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                var adminRole = new IdentityRole("Admin");
+
                 try
                 {
-                    var context = services.GetRequiredService<MvcSchoolContext>();
-                    context.Database.Migrate();
+                    dbContext.Database.Migrate();
                     CourseSeed.Initialize(services);
-                    //DbInitializer.Initialize(context);
+
+                    userContext.Database.Migrate();
+                    if(!userContext.Roles.Any())
+                    {
+                        roleMgr.CreateAsync(adminRole).GetAwaiter().GetResult();
+                    }
+
+                    if(!userContext.Users.Any(u=>u.UserName == "admin"))
+                    {
+                        var adminUser = new MvcSchoolUser
+                        {
+                            UserName = "admin@test.com",
+                            Email = "admin@test.com"
+                        };
+                        var result = userMgr.CreateAsync(adminUser, "Password.123").GetAwaiter().GetResult();
+                        userMgr.AddToRoleAsync(adminUser, adminRole.Name).GetAwaiter().GetResult();
+                    }
                 }
                 catch (Exception ex)
                 {

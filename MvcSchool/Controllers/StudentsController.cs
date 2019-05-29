@@ -14,15 +14,6 @@ namespace MvcSchool.Controllers
 {
     public class StudentsController : Controller
     {
-        //private readonly MvcSchoolContext _context;
-        //private readonly SchoolUserContext _contextUser;
-
-        //public StudentsController(MvcSchoolContext context, SchoolUserContext contextUser)
-        //{
-        //    _context = context;
-        //    _contextUser = contextUser;
-        //}
-
         private readonly MvcSchoolContext _context;
         //private readonly SchoolUserContext _contextUser;
         private readonly IAuthorizationService _authorizationService;
